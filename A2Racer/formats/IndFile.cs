@@ -1,3 +1,6 @@
+// TODO: there are IND and IMG files like "rc.img" which are a different format
+// from this for some reason??
+
 class IndFile {
 
     public class IndEntry {

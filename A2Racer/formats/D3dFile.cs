@@ -5,17 +5,11 @@ class D3dFile {
         public float u, v;
     }
 
-    public class Triangle {
-        public int a;
-        public int b;
-        public int c;
-    }
-
     private readonly string filename;
     private int numVertices;
-    private int numTriangles;
+    private int numFaces;
     private List<Vertex> vertices = new();
-    private List<Triangle> triangles = new();
+    private List<Generic.Face> faces = new();
 
     public D3dFile(string filename) {
         this.filename = filename;
@@ -29,14 +23,14 @@ class D3dFile {
         return numVertices;
     }
 
-    public int GetNumTriangles() {
-        return numTriangles;
+    public int GetNumFaces() {
+        return numFaces;
     }
 
     public D3dFile Read(BinaryReader reader) {
 
         numVertices = reader.ReadInt32();
-        numTriangles = reader.ReadInt32();
+        numFaces = reader.ReadInt32();
 
         for (int i = 0; i < numVertices; i++) {
             Vertex vertex = new()
@@ -58,17 +52,17 @@ class D3dFile {
             vertices.Add(vertex);
         }
 
-        for (int i = 0; i < numTriangles; i++) {
-            Triangle triangle = new()
+        for (int i = 0; i < numFaces; i++) {
+            Generic.Face face = new()
             {
-                a = reader.ReadInt16(),
-                b = reader.ReadInt16(),
-                c = reader.ReadInt16()
+                idx0 = reader.ReadInt16(),
+                idx1 = reader.ReadInt16(),
+                idx2 = reader.ReadInt16()
             };
 
             reader.BaseStream.Position += 3;
 
-            triangles.Add(triangle);
+            faces.Add(face);
         }
 
         return this;
@@ -96,8 +90,10 @@ class D3dFile {
 
         writer.WriteLine("s 0");
 
-        foreach (Triangle triangle in triangles) {
-            writer.WriteLine("f " + (triangle.a + 1) + "/" + (triangle.a + 1) + " " + (triangle.b + 1) + "/" + (triangle.b + 1) + " " + (triangle.c + 1) + "/" + (triangle.c + 1));
+        foreach (Generic.Face triangle in faces) {
+            writer.WriteLine("f " + (triangle.idx0 + 1) + "/" + (triangle.idx0 + 1) + " " + (triangle.idx1 + 1) + "/" + (triangle.idx1 + 1) + " " + (triangle.idx2 + 1) + "/" + (triangle.idx2 + 1));
         }
+        
+        writer.Close();
     }
 }
