@@ -1,4 +1,5 @@
-class RmpFile {
+public class RmpFile
+{
     // #pragma pattern_limit 999999
 
     // u32 ukn @ 0x00;
@@ -36,29 +37,45 @@ class RmpFile {
 
     // Chunk chunks[drawChunkCount] @ 0x08;
 
-    public class VertexData {
+
+    public class VertexData
+    {
         public float x;
         public float y;
         public float z;
         public float u;
         public float v;
+
+        public override string ToString()
+        {
+            return $"VertexData: {x}, {y}, {z} - uv: {u}, {v}";
+        }
     }
 
-    public class PlaneData {
-        private VertexData[] vertices = new VertexData[4];
-        private Generic.Face[] faces = new Generic.Face[2];
+    public class PlaneData
+    {
+        public const int NUM_VERTICES = 4;
+        public const int NUM_FACES = 2;
 
-        public VertexData[] GetVertices() {
+        private VertexData[] vertices = new VertexData[NUM_VERTICES];
+        private Generic.Face[] faces = new Generic.Face[NUM_FACES];
+
+        public VertexData[] GetVertices()
+        {
             return vertices;
         }
 
-        public Generic.Face[] GetFaces() {
+        public Generic.Face[] GetFaces()
+        {
             return faces;
         }
 
-        public PlaneData Read(BinaryReader reader) {
-            for(int i = 0; i < 4; i++) {
-                vertices[i] = new VertexData {
+        public PlaneData Read(BinaryReader reader)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                vertices[i] = new VertexData
+                {
                     x = reader.ReadSingle(),
                     y = reader.ReadSingle(),
                     z = reader.ReadSingle(),
@@ -67,8 +84,10 @@ class RmpFile {
                 };
             }
 
-            for(int i = 0; i < 2; i++) {
-                faces[i] = new Generic.Face {
+            for (int i = 0; i < 2; i++)
+            {
+                faces[i] = new Generic.Face
+                {
                     idx0 = reader.ReadInt32(),
                     idx1 = reader.ReadInt32(),
                     idx2 = reader.ReadInt32()
@@ -77,9 +96,15 @@ class RmpFile {
 
             return this;
         }
+
+        public override string ToString()
+        {
+            return $"PlaneData: {vertices[0]}, {vertices[1]}, {vertices[2]}, {vertices[3]} - {faces[0]}, {faces[1]}";
+        }
     }
 
-    public class Chunk {
+    public class Chunk
+    {
         private int roadPlaneCount;
         private List<PlaneData> roadPlanes = new List<PlaneData>();
         private int landPlaneCount;
@@ -89,60 +114,73 @@ class RmpFile {
         private int railPlaneCount;
         private List<PlaneData> railPlanes = new List<PlaneData>();
 
-        public int GetRoadPlaneCount() {
+        public int GetRoadPlaneCount()
+        {
             return roadPlaneCount;
         }
 
-        public List<PlaneData> GetRoadPlanes() {
+        public List<PlaneData> GetRoadPlanes()
+        {
             return roadPlanes;
         }
 
-        public int GetLandPlaneCount() {
+        public int GetLandPlaneCount()
+        {
             return landPlaneCount;
         }
 
-        public List<PlaneData> GetLandPlanes() {
+        public List<PlaneData> GetLandPlanes()
+        {
             return landPlanes;
         }
 
-        public int GetExtraPlaneCount() {
+        public int GetExtraPlaneCount()
+        {
             return extraPlaneCount;
         }
 
-        public List<PlaneData> GetExtraPlanes() {
+        public List<PlaneData> GetExtraPlanes()
+        {
             return extraPlanes;
         }
 
-        public int GetRailPlaneCount() {
+        public int GetRailPlaneCount()
+        {
             return railPlaneCount;
         }
 
-        public List<PlaneData> GetRailPlanes() {
+        public List<PlaneData> GetRailPlanes()
+        {
             return railPlanes;
         }
 
-        public Chunk Read(BinaryReader reader) {
+        public Chunk Read(BinaryReader reader)
+        {
             roadPlaneCount = reader.ReadInt32();
 
-            for(int i = 0; i < roadPlaneCount; i++) {
+            for (int i = 0; i < roadPlaneCount; i++)
+            {
                 roadPlanes.Add(new PlaneData().Read(reader));
             }
 
             landPlaneCount = reader.ReadInt32();
 
-            for(int i = 0; i < landPlaneCount; i++) {
+            for (int i = 0; i < landPlaneCount; i++)
+            {
                 landPlanes.Add(new PlaneData().Read(reader));
             }
 
             extraPlaneCount = reader.ReadInt32();
 
-            for(int i = 0; i < extraPlaneCount; i++) {
+            for (int i = 0; i < extraPlaneCount; i++)
+            {
                 extraPlanes.Add(new PlaneData().Read(reader));
             }
 
             railPlaneCount = reader.ReadInt32();
 
-            for(int i = 0; i < railPlaneCount; i++) {
+            for (int i = 0; i < railPlaneCount; i++)
+            {
                 railPlanes.Add(new PlaneData().Read(reader));
             }
 
@@ -155,109 +193,41 @@ class RmpFile {
     private List<Chunk> chunks = new List<Chunk>();
     private readonly string filename;
 
-    public RmpFile(string filename) {
+    public RmpFile(string filename)
+    {
         this.filename = filename;
     }
 
-    public string GetFilename() {
+    public string GetFilename()
+    {
         return filename;
     }
 
-    public int GetUkn() {
+    public int GetUkn()
+    {
         return ukn;
     }
 
-    public int GetDrawChunkCount() {
+    public int GetDrawChunkCount()
+    {
         return drawChunkCount;
     }
 
-    public List<Chunk> GetChunks() {
+    public List<Chunk> GetChunks()
+    {
         return chunks;
     }
 
-    public RmpFile Read(BinaryReader reader) {
+    public RmpFile Read(BinaryReader reader)
+    {
         ukn = reader.ReadInt32();
         drawChunkCount = reader.ReadInt32();
 
-        for(int i = 0; i < drawChunkCount; i++) {
+        for (int i = 0; i < drawChunkCount; i++)
+        {
             chunks.Add(new Chunk().Read(reader));
         }
 
         return this;
     }
-
-
-    // This may not be structure that needs to be rendered. It reminds me of Valve's BSP format.
-    // Aka, this aren't meant to render but split the world into chunks.
-    // Further research is needed to understand the purpose of this format.
-
-    // private string FormatMax(float value) {
-    //     return value.ToString("0.000000");
-    // }
-
-    // private void WritePlaneData(StreamWriter writer, PlaneData plane) {
-    //     VertexData[] vertices = plane.GetVertices();
-    //     Generic.Face[] faces = plane.GetFaces();
-
-    //     for(int k = 0; k < 4; k++) {
-    //         VertexData vertex = vertices[k];
-    //         writer.WriteLine("v " + FormatMax(vertex.x) + " " + FormatMax(vertex.y) + " " + FormatMax(vertex.z));
-    //     }
-
-    //     for(int k = 0; k < 4; k++) {
-    //         VertexData vertex = vertices[k];
-    //         writer.WriteLine("vt " + vertex.u + " " + vertex.v);
-    //     }
-
-    //     for(int k = 0; k < 2; k++) {
-    //         Generic.Face face = faces[k];
-    //         writer.WriteLine("f " + (face.idx0 + 1) + "/" + (face.idx0 + 1) + " " + (face.idx1 + 1) + "/" + (face.idx1 + 1) + " " + (face.idx2 + 1) + "/" + (face.idx2 + 1));
-    //     }
-    // }
-
-    // public void WriteToObj(string filepath) {
-    //     using StreamWriter writer = new(filepath);
-
-    //     string filename = Path.GetFileName(filepath).Replace(".obj", "");
-
-    //     writer.WriteLine("# " + filepath);
-
-    //     for(int i = 0; i < 1; i++) {
-    //         Chunk chunk = chunks[i];
-
-    //         List<PlaneData> roadPlanes = chunk.GetRoadPlanes();
-
-    //         if(roadPlanes.Count > 0) writer.WriteLine("o road_chunk" + i);
-
-    //         for(int j = 0; j < roadPlanes.Count; j++) {
-    //             WritePlaneData(writer, roadPlanes[j]);
-    //         }
-
-    //         // List<PlaneData> landPlanes = chunk.GetLandPlanes();
-
-    //         // if(landPlanes.Count > 0) writer.WriteLine("o land_chunk" + i);
-
-    //         // for(int j = 0; j < landPlanes.Count; j++) {
-    //         //     WritePlaneData(writer, landPlanes[j]);
-    //         // }
-
-    //         // List<PlaneData> extraPlanes = chunk.GetExtraPlanes();
-
-    //         // if(extraPlanes.Count > 0) writer.WriteLine("o extra_chunk" + i);
-
-    //         // for(int j = 0; j < extraPlanes.Count; j++) {
-    //         //     WritePlaneData(writer, extraPlanes[j]);
-    //         // }
-
-    //         // List<PlaneData> railPlanes = chunk.GetRailPlanes();
-
-    //         // if(railPlanes.Count > 0) writer.WriteLine("o rail_chunk" + i);
-
-    //         // for(int j = 0; j < railPlanes.Count; j++) {
-    //         //     WritePlaneData(writer, railPlanes[j]);
-    //         // }
-    //     }
-
-    //     writer.Close();
-    // }
 }

@@ -1,4 +1,4 @@
-class CarDataFile {
+public class CarDataFile {
 // struct LargeCarData {
 //     float v[31]; // float list for car stats, like upgrades and stuff
 // };

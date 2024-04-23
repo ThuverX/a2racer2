@@ -1,39 +1,65 @@
 // TODO: there are IND and IMG files like "rc.img" which are a different format
 // from this for some reason??
 
-class IndFile {
+// other ind file uses the following format i think:
+// u32 num_entries @ $;
+// struct Entry{
+//     u16 idx;
+//     u16 type;
+//}
+//
+// Entry entries[num_entries] @ $;
 
-    public class IndEntry {
+public class IndFile
+{
+    // u16 count @ $;
+
+    // struct IndEntry {
+    //     char name[20];
+    //     u32 offset;
+    // };
+
+    // IndEntry entries[count] @ $;
+
+    public class IndEntry
+    {
         private string name;
         private int offset;
         private int length = -1;
 
-        public IndEntry() {
+        public IndEntry()
+        {
             name = "";
             offset = 0;
         }
 
-        public string GetName() {
+        public string GetName()
+        {
             return name;
         }
 
-        public int GetOffset() {
+        public int GetOffset()
+        {
             return offset;
         }
 
-        public int GetLength() {
+        public int GetLength()
+        {
             return length;
         }
 
-        public int GetEnd() {
+        public int GetEnd()
+        {
             return offset + length;
         }
 
-        public void SetLength(int length) {
+        public void SetLength(int length)
+        {
             this.length = length;
         }
 
-        public IndEntry Read(BinaryReader reader) {
+        public IndEntry Read(BinaryReader reader)
+        {
             long start = reader.BaseStream.Position;
 
             name = Util.ReadCString(reader);
@@ -50,31 +76,37 @@ class IndFile {
     readonly List<IndEntry> entries = new();
     int numEntries;
 
-
-    public IndFile(string filename) {
+    public IndFile(string filename)
+    {
         this.filename = filename;
     }
 
-    public string GetFilename() {
+    public string GetFilename()
+    {
         return filename;
     }
 
-    public int GetNumEntries() {
+    public int GetNumEntries()
+    {
         return numEntries;
     }
 
-    public List<IndEntry> GetEntries() {
+    public List<IndEntry> GetEntries()
+    {
         return entries;
     }
 
-    public IndFile Read(BinaryReader reader) {
+    public IndFile Read(BinaryReader reader)
+    {
         numEntries = reader.ReadUInt16();
 
-        for (int i = 0; i < numEntries; i++) {
+        for (int i = 0; i < numEntries; i++)
+        {
             IndEntry entry = new();
             entry.Read(reader);
 
-            if(i > 0) {
+            if (i > 0)
+            {
                 IndEntry prevEntry = entries[i - 1];
                 prevEntry.SetLength(entry.GetOffset() - prevEntry.GetOffset());
             }

@@ -1,4 +1,4 @@
-class PthFile {
+public class PthFile {
     // s32 fileVersion @ $;
     // u32 count @ $;
 

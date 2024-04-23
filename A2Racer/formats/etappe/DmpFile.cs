@@ -1,4 +1,5 @@
-class DmpFile {
+public class DmpFile
+{
     // u32 count @ 0x00;
 
     // struct Chunk {

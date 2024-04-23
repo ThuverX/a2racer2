@@ -137,4 +137,4 @@
 //     }
 // }
 
-ConvertAnimIndicies.Convert("X:/a2racer/A2Racer/static/anim_indices_raw.txt", "X:/a2racer/A2Racer/static/anim_indices.csv");
+// ConvertAnimIndicies.Convert("X:/a2racer/A2Racer/static/anim_indices_raw.txt", "X:/a2racer/A2Racer/static/anim_indices.csv");

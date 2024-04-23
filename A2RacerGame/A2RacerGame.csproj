@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>winexe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jitter2" Version="2.1.1" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.6.0" />
+    <PackageReference Include="Raylib-cs" Version="6.0.0" />
+    <Reference Include="../A2Racer/bin/Debug/net7.0/A2Racer.dll"></Reference>
+  </ItemGroup>
+
+</Project>

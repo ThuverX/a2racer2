@@ -1,4 +1,4 @@
-class D3dFile {
+public class D3dFile {
 
     public class Vertex {
         public float x, y, z;
@@ -25,6 +25,14 @@ class D3dFile {
 
     public int GetNumFaces() {
         return numFaces;
+    }
+
+    public List<Vertex> GetVertices() {
+        return vertices;
+    }
+
+    public List<Generic.Face> GetFaces() {
+        return faces;
     }
 
     public D3dFile Read(BinaryReader reader) {
